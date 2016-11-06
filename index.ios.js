@@ -7,47 +7,32 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  StyleSheet,
-  Text,
-  View
+  Navigator
 } from 'react-native';
+
+import StationsList from './Scenes/StationsList';
+import StationDetail from './Scenes/StationDetail';
+
+const routes = [
+    {title: 'Stations', index: 0},
+    {title: 'Detail', index: 1},
+];
 
 export default class Velib extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+      <Navigator
+          initialRoute={routes[0]}
+          renderScene={(route, navigator) => {
+              if (route.index == 1) {
+                return (<StationDetail navigator={navigator} />);
+              } else {
+                return (<StationsList navigator={navigator} />);
+              }
+          }}
+          style={{paddingTop: 30}}/>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('Velib', () => Velib);
