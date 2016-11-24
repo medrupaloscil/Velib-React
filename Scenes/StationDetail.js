@@ -6,6 +6,8 @@ import {
   View
 } from 'react-native';
 
+import { createStore } from 'redux'
+
 export default class StationDetail extends Component {
   render() {
     return (

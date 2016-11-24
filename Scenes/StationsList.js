@@ -3,26 +3,39 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  ListView
 } from 'react-native';
 
+import { createStore } from 'redux'
+
+import ApiManager from '../Manager/ApiManager'
+
 export default class StationsList extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
-    );
-  }
+
+    constructor(){
+        super();
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+        //manager = new ApiManager()
+        console.log('before')
+        //data = manager.getParisContract()
+        console.log('after')
+        this.state = {
+            dataSource: ds.cloneWithRows(['test', 'toto', 'tutu'])
+        }
+    }
+
+    render() {
+        return (
+         <View style={styles.container}>
+            <ListView
+                dataSource={this.state.dataSource}
+                renderRow={(rowData) => <Text>{rowData}</Text>}
+            />
+         </View>
+        );
+    }
+
 }
 
 const styles = StyleSheet.create({
@@ -43,3 +56,5 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+AppRegistry.registerComponent('StationsList', () => StationsList);
