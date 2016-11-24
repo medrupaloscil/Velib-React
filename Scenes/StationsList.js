@@ -16,8 +16,6 @@ export default class StationsList extends Component {
     constructor(){
         super();
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-        manager = new ApiManager()
-        data = manager.getParisContract()
         this.state = {
             dataSource: ds.cloneWithRows(['test', 'toto', 'tutu'])
         }
@@ -28,10 +26,30 @@ export default class StationsList extends Component {
          <View style={styles.container}>
             <ListView
                 dataSource={this.state.dataSource}
-                renderRow={(rowData) => <Text>{rowData}</Text>}
+                renderRow={this.renderRow.bind(this)}
             />
          </View>
         );
+    }
+
+    componentWillMount(){}
+
+    componentDidMount(){
+
+      ApiManager.getCityContract("Paris")
+      .then(responseJson => {
+        this.setState({dataSource: this.state.dataSource.cloneWithRows(responseJson)})
+      })
+    }
+
+    renderRow(data){
+      //overriding is used to display json object
+      return (
+          <View>
+            <Text>{data.number}</Text>
+            <Text>{data.name}</Text>
+          </View>
+      )
     }
 
 }
@@ -54,5 +72,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
 
 AppRegistry.registerComponent('StationsList', () => StationsList);
