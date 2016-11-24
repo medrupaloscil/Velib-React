@@ -7,17 +7,36 @@ import { createStore } from 'redux';
 
 export default class ApiManager extends Component{
 
+    config = require('../config/api.json')
     baseUrl = "https://api.jcdecaux.com/vls/v1/";
 
-    getParisContract(){
-                d = this.baseUrl+"stations?contract=Paris";
-                console.log('test');
+    getParisContract(city){
+                d = this.baseUrl+"stations?contract=Paris&apiKey="+this.config.apiKey;
+                //d = this.baseUrl+"stations?contract="+city+"&apiKey="+config.apiKey;
+
                 data = fetch(d)
                 .then((response) => response.json())
                 .then((responseJson) => {
                   console.warn(responseJson)
-                    return responseJson
+                    return responseJson;
+                })
+                .catch((error) => {
+                  console.error(error);
                 })
     }
 
+    getStationDetail(stationId, city){
+      //d = this.baseUrl+"stations/"+stationId+"?contract="+city+"&apiKey="+config.apiKey;
+      d = this.baseUrl+"stations/31705?contract=Paris&apiKey="+this.config.apiKey;
+
+      data = fetch(d)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.warn(responseJson)
+          return responseJson;
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+    }
 }

@@ -16,10 +16,8 @@ export default class StationsList extends Component {
     constructor(){
         super();
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-        //manager = new ApiManager()
-        console.log('before')
-        //data = manager.getParisContract()
-        console.log('after')
+        manager = new ApiManager()
+        data = manager.getParisContract()
         this.state = {
             dataSource: ds.cloneWithRows(['test', 'toto', 'tutu'])
         }
