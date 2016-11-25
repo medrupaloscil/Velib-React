@@ -4,32 +4,56 @@ import {
   StyleSheet,
   Text,
   View,
+  ListView,
   Dimensions,
   MapView
 } from 'react-native';
 
+import { createStore } from 'redux'
+
+import ApiManager from '../Manager/ApiManager'
+
 const width = Dimensions.get('window').width;
 
 export default class StationsList extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <MapView
-        style={styles.map}
-        showsUserLocation={true} followUserLocation={true}/>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
-    );
-  }
+
+    constructor(){
+        super();
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+        this.state = {
+            dataSource: ds.cloneWithRows(['test', 'toto', 'tutu'])
+        }
+    }
+
+    render() {
+        return (
+         <View style={styles.container}>
+           <MapView style={styles.map} showsUserLocation={true} followUserLocation={true}/>
+            <ListView
+                dataSource={this.state.dataSource}
+                renderRow={this.renderRow.bind(this)}/>
+         </View>
+        );
+    }
+
+    componentWillMount(){}
+
+    componentDidMount(){
+
+      ApiManager.getCityContract("Paris")
+      .then(responseJson => {
+        this.setState({dataSource: this.state.dataSource.cloneWithRows(responseJson)})
+      })
+    }
+
+    renderRow(data){
+      return (
+          <View>
+            <Text>{data.number}</Text>
+            <Text>{data.name}</Text>
+          </View>
+      )
+    }
 }
 
 const styles = StyleSheet.create({
@@ -77,3 +101,5 @@ var NavigationBarRouteMapper = {
     );
   }
 }
+
+AppRegistry.registerComponent('StationsList', () => StationsList);
