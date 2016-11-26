@@ -17,7 +17,6 @@ ApiManager = {
     return fetch(d)
     .then((response) => response.json())
     .then((responseJson) => {
-      console.warn(responseJson)
       return responseJson;
     })
     .catch((error) => {
@@ -32,7 +31,6 @@ ApiManager = {
     return fetch(d)
     .then((response) => response.json())
     .then((responseJson) => {
-      console.warn(responseJson)
         return responseJson;
     })
     .catch((error) => {
