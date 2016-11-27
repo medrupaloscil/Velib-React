@@ -7,8 +7,10 @@ import {
   View,
   ListView,
   Dimensions,
-  MapView
+  Platform
 } from 'react-native';
+
+import MapView from 'react-native-maps';
 
 import { createStore } from 'redux'
 
@@ -30,9 +32,19 @@ export default class StationsList extends Component {
         return (
          <View style={styles.container}>
            <MapView
-            annotations={this.state.markers}
-            style={styles.map}
-            showsUserLocation={true} followUserLocation={true}/>
+            //annotations={this.state.markers}
+            customMapStyle={styles.map}
+            showsUserLocation={true} /*Platform.select({ ios:{ followUserLocation={true} }, android: { showsMyLocationButton={true} } })*/ >
+
+            {this.state.markers.map(marker => (
+              <MapView.Marker
+                coordinate={marker.coordinates}
+                title={marker.title}
+                description={marker.subtitle}
+              />
+            ))}
+
+            </MapView>
             <ListView
                 enableEmptySections={true}
                 dataSource={this.state.dataSource}
@@ -68,8 +80,10 @@ function createMarkers(data) {
   for (var i = data.length - 1; i >= 0; i--) {
     var datum = data[i];
     var marker = {
-      latitude: datum.position.lat,
-      longitude: datum.position.lng,
+      coordinates: {
+        latitude: datum.position.lat,
+        longitude: datum.position.lng
+      },
       title: datum.name,
       subtitle: datum.available_bikes + " vélos restant, " + datum.available_bike_stands + " places libres",
       image: require('../img/velo2.png'),
@@ -96,7 +110,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   map: {
-    height: 200, 
+    height: 200,
     width: width,
     backgroundColor:"#000"
   },
