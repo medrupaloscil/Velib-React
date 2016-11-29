@@ -28,11 +28,24 @@ export default class StationsList extends Component {
         }
     }
 
+    getInitialState() {
+      return {
+        region: {
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        },
+      };
+    }
+
     render() {
         return (
          <View style={styles.container}>
            <MapView
             //annotations={this.state.markers}
+            region={this.state.region}
+            onRegionChange={this.onRegionChange}
             customMapStyle={styles.map}
             showsUserLocation={true} /*Platform.select({ ios:{ followUserLocation={true} }, android: { showsMyLocationButton={true} } })*/ >
 
@@ -45,6 +58,7 @@ export default class StationsList extends Component {
             ))}
 
             </MapView>
+            <Text>test</Text>
             <ListView
                 enableEmptySections={true}
                 dataSource={this.state.dataSource}
@@ -93,8 +107,19 @@ function createMarkers(data) {
   return markers;
 }
 
+function onRegionChange(region) {
+  this.setState({ region });
+}
+
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'flex-end',
+
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
@@ -110,9 +135,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   map: {
-    height: 200,
-    width: width,
-    backgroundColor:"#000"
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   station_row: {
     width: width,
