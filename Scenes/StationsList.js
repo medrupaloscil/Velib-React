@@ -7,7 +7,8 @@ import {
   View,
   ListView,
   Dimensions,
-  Platform
+  Platform,
+  TouchableHighlight
 } from 'react-native';
 
 import MapView from 'react-native-maps';
@@ -19,74 +20,89 @@ import ApiManager from '../Manager/ApiManager'
 const width = Dimensions.get('window').width;
 
 export default class StationsList extends Component {
-    constructor(){
-        super();
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-        this.state = {
-            dataSource: ds.cloneWithRows([]),
-            markers: []
-        }
-    }
+  constructor(props){
+      super(props);
+      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+      this.state = {
+          dataSource: ds.cloneWithRows([]),
+          markers: [],
+          datas: [],
+          selected: 0
+      }
+  }
 
-    getInitialState() {
-      return {
-        region: {
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        },
-      };
-    }
-
-    render() {
-        return (
-         <View style={styles.container}>
-           <MapView
-            //annotations={this.state.markers}
-            region={this.state.region}
-            onRegionChange={this.onRegionChange}
-            customMapStyle={styles.map}
-            showsUserLocation={true} /*Platform.select({ ios:{ followUserLocation={true} }, android: { showsMyLocationButton={true} } })*/ >
-
-            {this.state.markers.map(marker => (
-              <MapView.Marker
-                coordinate={marker.coordinates}
-                title={marker.title}
-                description={marker.subtitle}
-              />
-            ))}
-
-            </MapView>
-            <Text>test</Text>
-            <ListView
-                enableEmptySections={true}
-                dataSource={this.state.dataSource}
-                renderRow={this.renderRow.bind(this)}/>
-         </View>
-        );
-    }
-
-    componentWillMount(){
-      ApiManager.getCityContract("Paris")
-      .then(responseJson => {
-        this.setState({dataSource: this.state.dataSource.cloneWithRows(responseJson)})
-        this.setState({
-          markers: createMarkers(responseJson)
-        })
-      })
-    }
-
-    componentDidMount(){}
-
-    renderRow(data){
+  render() {
       return (
+       <View style={styles.container}>
+         <MapView
+          //annotations={this.state.markers}
+          region={this.state.region}
+          onRegionChange={this.onRegionChange}
+          customMapStyle={styles.map}
+          showsUserLocation={true} /*Platform.select({ ios:{ followUserLocation={true} }, android: { showsMyLocationButton={true} } })*/ >
+
+          {this.state.markers.map(marker => (
+            <MapView.Marker
+              coordinate={marker.coordinates}
+              title={marker.title}
+              description={marker.subtitle}/>
+          ))}
+
+          </MapView>
+          <Text>test</Text>
+          <ListView
+              enableEmptySections={true}
+              dataSource={this.state.dataSource}
+              renderRow={this.renderRow.bind(this)}/>
+       </View>
+      );
+  }
+
+  componentWillMount(){
+    ApiManager.getCityContract("Paris")
+    .then(responseJson => {
+      this.setState({dataSource: this.state.dataSource.cloneWithRows(responseJson)})
+      this.setState({data: responseJson})
+      this.setState({
+        markers: createMarkers(responseJson)
+      })
+    })
+  }
+
+  componentDidMount(){}
+
+  renderRow(data, sectionID: number, rowID: number){
+    return (
+        <TouchableHighlight onPress={() => {
+          this.setState({selected: rowID})
+          this.gotoDetail.bind(this)
+        }}>
           <View style={styles.station_row}>
             <Text style={styles.station_name}>{data.name}</Text>
             <Text style={styles.station_count}>{data.available_bikes}/{data.bike_stands}</Text>
           </View>
-      )
-    }
+        </TouchableHighlight>
+    )
+  }
+
+  gotoDetail(id) {
+    this.props.navigator.push({
+      id: 'StationDetail',
+      name: 'StationDetail',
+      stationId: data[this.state.selected].id
+    });
+  }
+}
+
+function getInitialState() {
+  return {
+    region: {
+      latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    },
+  };
 }
 
 function createMarkers(data) {
