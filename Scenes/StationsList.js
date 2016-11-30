@@ -49,7 +49,6 @@ export default class StationsList extends Component {
           ))}
 
           </MapView>
-          <Text>test</Text>
           <ListView
               enableEmptySections={true}
               dataSource={this.state.dataSource}
@@ -75,7 +74,8 @@ export default class StationsList extends Component {
     return (
         <TouchableHighlight onPress={() => {
           this.setState({selected: rowID})
-          this.gotoDetail.bind(this)
+          this.gotoDetail(rowID)
+
         }}>
           <View style={styles.station_row}>
             <Text style={styles.station_name}>{data.name}</Text>
@@ -89,7 +89,7 @@ export default class StationsList extends Component {
     this.props.navigator.push({
       id: 'StationDetail',
       name: 'StationDetail',
-      stationId: data[this.state.selected].id
+      stationId: this.state.data[this.state.selected].id
     });
   }
 }

@@ -23,8 +23,9 @@ export default class Velib extends Component {
     return (
       <Navigator
           initialRoute={routes[0]}
+          initialRouteStack={routes}
           renderScene={(route, navigator) => {
-              if (route.index == 1) {
+              if (route.id == "StationDetail") {
                 return (<StationDetail navigator={navigator} />);
               } else {
                 return (<StationsList navigator={navigator} />);
