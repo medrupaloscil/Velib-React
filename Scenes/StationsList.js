@@ -7,11 +7,11 @@ import {
   View,
   ListView,
   Dimensions,
+  Animated,
   Platform,
+  MapView,
   TouchableHighlight
 } from 'react-native';
-
-import MapView from 'react-native-maps';
 
 import { createStore } from 'redux'
 
@@ -35,21 +35,10 @@ export default class StationsList extends Component {
       return (
        <View style={styles.container}>
          <MapView
-          //annotations={this.state.markers}
-          region={this.state.region}
-          onRegionChange={this.onRegionChange}
-          customMapStyle={styles.map}
-          showsUserLocation={true} /*Platform.select({ ios:{ followUserLocation={true} }, android: { showsMyLocationButton={true} } })*/ >
-
-          {this.state.markers.map(marker => (
-            <MapView.Marker
-              coordinate={marker.coordinates}
-              title={marker.title}
-              description={marker.subtitle}/>
-          ))}
-
-          </MapView>
-          <Text>test</Text>
+            annotations={this.state.markers}
+            style={styles.map}
+            showsUserLocation={true} followUserLocation={true}/>
+          <Text>Stations</Text>
           <ListView
               enableEmptySections={true}
               dataSource={this.state.dataSource}
@@ -94,26 +83,13 @@ export default class StationsList extends Component {
   }
 }
 
-function getInitialState() {
-  return {
-    region: {
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    },
-  };
-}
-
 function createMarkers(data) {
   var markers = [];
   for (var i = data.length - 1; i >= 0; i--) {
     var datum = data[i];
     var marker = {
-      coordinates: {
-        latitude: datum.position.lat,
-        longitude: datum.position.lng
-      },
+      latitude: datum.position.lat,
+      longitude: datum.position.lng,
       title: datum.name,
       subtitle: datum.available_bikes + " vélos restant, " + datum.available_bike_stands + " places libres",
       image: require('../img/velo2.png'),
@@ -135,10 +111,9 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     justifyContent: 'flex-end',
-
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#FFF',
   },
   welcome: {
     fontSize: 20,
@@ -151,11 +126,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   map: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    height: 200, 
+    width: width,
+    backgroundColor:"#000"
   },
   station_row: {
     width: width,
