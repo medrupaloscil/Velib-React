@@ -8,52 +8,19 @@ import {
 
 import { createStore } from 'redux'
 
-export default class StationDetail extends Component {
+export default class StationDetail extends Component {$
 
   constructor(props) {
-    super(props);
+    super(props)
+    console.log(props)
   }
 
   render() {
     return (
-      <Navigator
-          renderScene={this.renderScene.bind(this)}
-          navigator={this.props.navigator}
-          navigationBar={
-            <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
-                routeMapper={NavigationBarRouteMapper} />
-          } />
-    );
-  }
-
-  renderScene(route, navigator) {
-    return (
-      <View style={[styles.container, {flex: 1}]}>
-        <Text>Hello</Text>
+      <View style={styles.container}>
+        <Text>Station ID: #{this.props.stationId}</Text>
+        <Text>{this.props.name}</Text>
       </View>
-    );
-  }
-}
-
-var NavigationBarRouteMapper = {
-  LeftButton(route, navigator, index, navState) {
-    return (
-      <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-          onPress={() => navigator.parentNavigator.pop()}>
-        <Text style={{color: 'white', margin: 10,}}>
-          Back
-        </Text>
-      </TouchableOpacity>
-    );
-  },
-  RightButton(route, navigator, index, navState) {
-    return null;
-  },
-  Title(route, navigator, index, navState) {
-    return (
-      <Text style={{color: 'white', margin: 10, fontSize: 16}}>
-        Detail
-      </Text>
     );
   }
 }
